@@ -1,0 +1,18 @@
+%YAML:1.0
+
+# Camera:
+#   fx: 517.3
+#   fy: 516.5
+#   cx: 318.6
+#   cy: 255.3
+#   d0: 0.2624
+#   d1: -0.9531
+#   d2: -0.0054
+#   d3: 0.0026
+
+image_path: "/home/ubuntu/Documents/DATA/SLAM/rgbd_dataset_freiburg1_xyz/rgb/1305031104.875350.png"
+imwidth:  640
+imheight: 480
+cellsize: 10
+pyrLevel: 3
+intThreshold: 20
