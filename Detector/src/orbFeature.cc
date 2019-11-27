@@ -1,5 +1,33 @@
 #include "orbFeature.hpp"
 
+bool OctNode::split(OctNode* n1, OctNode* n2, OctNode* n3, OctNode* n4) {
+    const int w = mRect.width/2;
+    const int h = mRect.height/2;
+    const int x = mRect.tl().x;
+    const int y = mRect.tl().y;
+
+    n1->mRect = Rect(Point(x+0, y+0), Point(x+w*1-1, y+1*h-1));
+    n1->mPts.clear();
+    n2->mRect = Rect(Point(x+w, y+0), Point(x+w*2-1, y+1*h-1));
+    n2->mPts.clear();
+    n3->mRect = Rect(Point(x+0, y+h), Point(x+w*1-1, y+2*h-1));
+    n3->mPts.clear();
+    n4->mRect = Rect(Point(x+w, y+h), Point(x+w*2-1, y+2*h-1));
+    n4->mPts.clear();
+
+    OctNode* vNodes[] = {n1, n2, n3, n4};
+    for (KeyPoint& kp: mPts) {
+        const int px = kp.pt.x - x;
+        const int py = kp.pt.y - y;
+        
+        const int dx = px/w;
+        const int dy = py/h;
+        vNodes[dx + 2*dy]->mPts.push_back(kp);
+    }
+
+    return true;
+}
+
 orbFeature::orbFeature(int width, int height, int cellSize, int levels, int ftrNum, int threshold):
     DetectorBase(width, height, cellSize, levels), mThreshold(threshold), mMaxFtrNum(ftrNum) {
     /*   calculate each level key point number   */
@@ -44,7 +72,41 @@ bool orbFeature::detect(vector<Mat>& images, vector<MKeyPoint>& keyPoints) {
     }
 }
 
-bool orbFeature::distributeOctTree(vector<KeyPoint>& distKeyPoint, Point tl, Point br, int predKPCnt) {
+bool orbFeature::distributeOctTree(vector<KeyPoint>& distKeyPoints, Point tl, Point br, int predKPCnt) {
     int initSeq = int((br.x - tl.x)/(br.y - tl.y));
     
+    const float xgap = static_cast<float>(br.x - tl.x)/initSeq;
+
+    list<OctNode>    listNodes;
+    vector<OctNode*> nodePtrs;
+    nodePtrs.resize(initSeq);
+
+
+    /*  初始的根节点  */
+    for (int i = 0; i < initSeq; i++) {
+        OctNode node;
+        const int W = (br.x - tl.x)/initSeq;
+        const int H = (br.y - tl.y)/initSeq;
+
+        Point2f p1(br.x, br.y), p2(W-1, H-1);
+        node.mRect = Rect(p1, p2);
+
+        listNodes.push_back(node);
+        nodePtrs[i] = &listNodes.back();
+    }
+
+    for (KeyPoint& kp : distKeyPoints) {
+        nodePtrs[kp.pt.x / xgap]->mPts.push_back(kp);
+    }
+
+    /*   广度优先遍历   */
+    while(!listNodes.empty()) {
+        OctNode node = listNodes.front();
+        listNodes.pop_front();
+
+        /*   split   */
+        OctNode n1, n2, n3, n4;
+        node.split(&n1, &n2, &n3, &n4)
+    }
+
 }

@@ -10,6 +10,13 @@
 using namespace std;
 using namespace cv;
 
+struct OctNode {
+    Rect mRect;
+    vector<KeyPoint> mPts;
+
+    bool split(OctNode* n1, OctNode* n2, OctNode* n3, OctNode* n4);
+};
+
 class orbFeature : public DetectorBase {
 public:
     orbFeature(int width, int height, int cellSize, int levels, int ftrNum, int threshold);
