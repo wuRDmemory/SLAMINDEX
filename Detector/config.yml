@@ -14,5 +14,6 @@ image_path: "/home/ubuntu/Documents/DATA/SLAM/rgbd_dataset_freiburg1_xyz/rgb/130
 imwidth:  640
 imheight: 480
 cellsize: 10
-pyrLevel: 3
-intThreshold: 20
+pyr_level: 3
+feature_num: 500
+intThreshold: 40

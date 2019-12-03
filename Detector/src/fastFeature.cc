@@ -15,7 +15,7 @@ bool FastFeature::detect(vector<Mat>& images, vector<MKeyPoint>& keyPoints) {
         /*  find the most strong response key point  */
         for (int j = 0; j < kps.size(); j++) {
             KeyPoint& kp = kps[j];
-            Point2f   pt = kp.pt;
+            Point2f   pt = kp.pt*(1<<i);
             if (pt.x < mBorder          || pt.y < mBorder          || 
                 pt.x > mWidth - mBorder || pt.y > mHeight - mBorder) {
                 continue;
@@ -25,7 +25,7 @@ bool FastFeature::detect(vector<Mat>& images, vector<MKeyPoint>& keyPoints) {
             const int y  = pt.y / mCellSize;
             if (mCells[y*mCols + x].response < kp.response) {
                 mCells[y*mCols + x].response = kp.response;
-                mCells[y*mCols + x].px    = pt*(1<<i);
+                mCells[y*mCols + x].px    = pt;
                 mCells[y*mCols + x].level = i;
             }
         }

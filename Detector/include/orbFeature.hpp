@@ -11,20 +11,22 @@ using namespace std;
 using namespace cv;
 
 struct OctNode {
+    bool mNoMore;
     Rect mRect;
     vector<KeyPoint> mPts;
 
-    bool split(OctNode* n1, OctNode* n2, OctNode* n3, OctNode* n4);
+    OctNode() : mNoMore(false) {}
+    bool split(OctNode& n1, OctNode& n2, OctNode& n3, OctNode& n4);
 };
 
-class orbFeature : public DetectorBase {
+class ORBFeature : public DetectorBase {
 public:
-    orbFeature(int width, int height, int cellSize, int levels, int ftrNum, int threshold);
+    ORBFeature(int width, int height, int cellSize, int levels, int ftrNum, int threshold);
 
     bool detect(vector<Mat>& images, vector<MKeyPoint>& keyPoints);
 
 private:
-    bool distributeOctTree(vector<KeyPoint>& distKeyPoint, Point tl, Point br, int predKPCnt);
+    bool distributeOctTree(Mat& image, vector<KeyPoint>& distKeyPoint, vector<Point2f>& keyPoints, Point tl, Point br, int predKPCnt);
 
 private:
     int mThreshold;

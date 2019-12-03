@@ -6,12 +6,13 @@
 #include "detectorBase.hpp"
 #include "goodFeatureDist.hpp"
 #include "fastFeature.hpp"
+#include "orbFeature.hpp"
 #include "config.hpp"
 
 using namespace std;
 using namespace cv;
 
-const string configPath = "../config.yml";
+const string configPath = "/home/ubuntu/Projects/SLAM/SLAMINDEX/Detector/config.yml";
 
 void drawKeyPoints(Mat image, vector<MKeyPoint>& keyPoints) {
     cvtColor(image, image, cv::COLOR_GRAY2BGR);
@@ -37,7 +38,8 @@ int main(int argc, char* argv[]) {
 
     /*  create detector  */
     // DetectorBase* detector = new GoodFeatureDist(cfg.imageWidth, cfg.imageHeight, cfg.cellSize);
-    DetectorBase* detector = new FastFeature(cfg.imageWidth, cfg.imageHeight, cfg.cellSize, 20);
+    // DetectorBase* detector = new FastFeature(cfg.imageWidth, cfg.imageHeight, cfg.cellSize, cfg.levels, cfg.threshold);
+    DetectorBase* detector = new ORBFeature(cfg.imageWidth, cfg.imageHeight, cfg.cellSize, cfg.levels, cfg.featureNum, cfg.threshold);
     
     /*  build image pyramad  */
     Mat image = imread(cfg.imagePath, 0);
